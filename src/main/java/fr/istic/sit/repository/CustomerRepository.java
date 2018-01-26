@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package fr.istic.sit.data.mongo;
+package fr.istic.sit.repository;
 
 import java.util.List;
 
+import fr.istic.sit.domain.Customer;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface CustomerRepository extends MongoRepository<Customer, String> {

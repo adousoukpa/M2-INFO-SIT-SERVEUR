@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package fr.istic.sit.data.mongo;
+package fr.istic.sit.main;
 
+import fr.istic.sit.domain.Customer;
+import fr.istic.sit.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

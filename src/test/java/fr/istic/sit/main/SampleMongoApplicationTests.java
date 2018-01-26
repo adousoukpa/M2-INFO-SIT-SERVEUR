@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fr.istic.sit.data.mongo;
+package fr.istic.sit.main;
 
 import java.net.ConnectException;
 

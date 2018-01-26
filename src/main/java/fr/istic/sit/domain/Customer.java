@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fr.istic.sit.data.mongo;
+package fr.istic.sit.domain;
 
 import org.springframework.data.annotation.Id;
 
