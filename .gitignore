@@ -1,4 +1,6 @@
-
+# Configuration IntelliJ
 \.idea/
-
 *.iml
+
+# Fichiers générés lors du build
+target/**
