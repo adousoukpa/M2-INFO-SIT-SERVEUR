@@ -1,6 +1,6 @@
-#Server SIT
+# Server SIT
 
-###Génération d'un token
+### Génération d'un token
 Pour générer un token il suffit de passer une requete en POST comme suit : 
 ```shell
 curl -X POST \
