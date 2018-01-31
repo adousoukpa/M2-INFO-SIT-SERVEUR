@@ -1,0 +1,26 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "latitude",
+            "fieldType": "Double",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "longitude",
+            "fieldType": "Double",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "altitude",
+            "fieldType": "Double",
+            "fieldValidateRules": []
+        }
+    ],
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "localisation",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}
