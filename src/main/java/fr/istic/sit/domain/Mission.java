@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,12 +25,12 @@ public class Mission implements Serializable {
     private String titre;
 
     @Field("date_debut")
-    private LocalDate dateDebut;
+    private LocalDateTime dateDebut;
 
     @Field("date_fin")
-    private LocalDate dateFin;
+    private LocalDateTime dateFin;
 
-    @Field("localisationList")
+    @Field("localisation_list")
     private List<Localisation> localisationList;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -54,29 +55,29 @@ public class Mission implements Serializable {
         this.titre = titre;
     }
 
-    public LocalDate getDateDebut() {
+    public LocalDateTime getDateDebut() {
         return dateDebut;
     }
 
-    public Mission dateDebut(LocalDate dateDebut) {
+    public Mission dateDebut(LocalDateTime dateDebut) {
         this.dateDebut = dateDebut;
         return this;
     }
 
-    public void setDateDebut(LocalDate dateDebut) {
+    public void setDateDebut(LocalDateTime dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public LocalDate getDateFin() {
+    public LocalDateTime getDateFin() {
         return dateFin;
     }
 
-    public Mission dateFin(LocalDate dateFin) {
+    public Mission dateFin(LocalDateTime dateFin) {
         this.dateFin = dateFin;
         return this;
     }
 
-    public void setDateFin(LocalDate dateFin) {
+    public void setDateFin(LocalDateTime dateFin) {
         this.dateFin = dateFin;
     }
 
