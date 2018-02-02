@@ -1,6 +1,7 @@
 package fr.istic.sit.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import fr.istic.sit.domain.Localisation;
 import fr.istic.sit.domain.Mission;
 
 import fr.istic.sit.repository.MissionRepository;
@@ -76,6 +77,32 @@ public class MissionResource {
         if (mission.getId() == null) {
             return createMission(mission);
         }
+        Mission result = missionRepository.save(mission);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, mission.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * PUT  /missions/addLocalisation/:id : Ajoute une localisation à la mission passée en paramètre
+     *
+     * @param id : id de la mission a modifier
+     * @param localisation : localisation a ajouter
+     * @return the ResponseEntity with status 200 (OK) and with body the updated mission,
+     * or with status 400 (Bad Request) if the mission is not valid,
+     * or with status 500 (Internal Server Error) if the mission couldn't be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PutMapping("/missions/addLocalisation/{id}")
+    @Timed
+    public ResponseEntity<Mission> addLocalisation(@PathVariable String id,@RequestBody Localisation localisation) throws URISyntaxException {
+        log.debug("REST request : Ajout de la localisation {} à la mission d'id {}", localisation, id);
+        log.trace("Récupération de la mission");
+        Mission mission = missionRepository.findOne(id);
+        if(mission == null){
+            throw new BadRequestAlertException("La mission est introuvable. L'id donné en paramètre ne permet pas de récupérer une mission",ENTITY_NAME,"id-noref");
+        }
+        mission.addLocalisation(localisation);
         Mission result = missionRepository.save(mission);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, mission.getId().toString()))

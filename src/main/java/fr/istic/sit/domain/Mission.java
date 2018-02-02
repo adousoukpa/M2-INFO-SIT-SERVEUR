@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -90,6 +91,13 @@ public class Mission implements Serializable {
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public void addLocalisation(Localisation localisation){
+        if(localisationList==null){
+            localisationList = new ArrayList<>();
+        }
+        localisationList.add(localisation);
+    }
 
     @Override
     public boolean equals(Object o) {
