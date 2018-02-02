@@ -2,6 +2,7 @@ package fr.istic.sit.web.rest;
 
 import fr.istic.sit.ServeurApp;
 
+import fr.istic.sit.domain.Localisation;
 import fr.istic.sit.domain.Mission;
 import fr.istic.sit.repository.MissionRepository;
 import fr.istic.sit.web.rest.errors.ExceptionTranslator;
@@ -10,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -38,6 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ServeurApp.class)
 public class MissionResourceIntTest {
+
+    private final Logger log = LoggerFactory.getLogger(MissionResourceIntTest.class);
 
     private static final String DEFAULT_TITRE = "AAAAAAAAAA";
     private static final String UPDATED_TITRE = "BBBBBBBBBB";
@@ -194,6 +199,73 @@ public class MissionResourceIntTest {
         assertThat(testMission.getTitre()).isEqualTo(UPDATED_TITRE);
         assertThat(testMission.getDateDebut()).isEqualTo(UPDATED_DATE_DEBUT);
         assertThat(testMission.getDateFin()).isEqualTo(UPDATED_DATE_FIN);
+    }
+
+    @Test
+    public void addLocation() throws Exception {
+        // Initialize the database
+        missionRepository.save(mission);
+        int databaseSizeBeforeUpdate = missionRepository.findAll().size();
+
+        // Update the mission
+        Mission updatedMission = missionRepository.findOne(mission.getId());
+        int oldLocalisationSize = 0;
+        if(updatedMission.getLocalisationList()!=null){
+            oldLocalisationSize = updatedMission.getLocalisationList().size();
+        }
+
+        Localisation l = new Localisation();
+        l.setAltitude(13.0);
+        l.setLatitude(13.5165181);
+        l.setLongitude(-61.651984913);
+
+        restMissionMockMvc.perform(put("/api/missions/"+updatedMission.getId()+"/addLocalisation")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(l)))
+            .andExpect(status().isOk());
+
+        // Validate the Mission in the database
+        List<Mission> missionList = missionRepository.findAll();
+        assertThat(missionList).hasSize(databaseSizeBeforeUpdate);
+        Mission testMission = missionList.get(missionList.size() - 1);
+        assertThat(testMission.getLocalisationList().size()).isEqualTo(oldLocalisationSize+1);
+    }
+
+    @Test
+    public void addLocationNonExistingMission() throws Exception {
+
+        String idNotExisting = "EVNZNVIEVE11861481C";
+
+        Localisation l = new Localisation();
+        l.setAltitude(13.0);
+        l.setLatitude(13.5165181);
+        l.setLongitude(-61.651984913);
+
+        restMissionMockMvc.perform(put("/api/missions/"+idNotExisting+"/addLocalisation")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(l)))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addExistingLocationToMission() throws Exception {
+
+        // Initialize the database
+        missionRepository.save(mission);
+
+        // Update the mission
+        Mission updatedMission = missionRepository.findOne(mission.getId());
+
+        Localisation l = new Localisation();
+        l.setId("56161v1erv1er1v1er");
+        l.setAltitude(13.0);
+        l.setLatitude(13.5165181);
+        l.setLongitude(-61.651984913);
+
+        restMissionMockMvc.perform(put("/api/missions/"+updatedMission.getId()+"/addLocalisation")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(l)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
