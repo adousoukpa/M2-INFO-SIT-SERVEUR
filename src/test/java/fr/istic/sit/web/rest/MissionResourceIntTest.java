@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fr.istic.sit.web.rest.TestUtil.createFormattingConversionService;
@@ -209,15 +210,15 @@ public class MissionResourceIntTest {
 
         // Update the mission
         Mission updatedMission = missionRepository.findOne(mission.getId());
-        int oldLocalisationSize = 0;
-        if(updatedMission.getLocalisationList()!=null){
-            oldLocalisationSize = updatedMission.getLocalisationList().size();
-        }
+        updatedMission.setLocalisationList(new ArrayList<>());
 
         Localisation l = new Localisation();
         l.setAltitude(13.0);
         l.setLatitude(13.5165181);
         l.setLongitude(-61.651984913);
+        updatedMission.addLocalisation(l);
+        missionRepository.save(updatedMission);
+        int oldLocalisationSize = updatedMission.getLocalisationList().size();
 
         restMissionMockMvc.perform(put("/api/missions/"+updatedMission.getId()+"/addLocalisation")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
