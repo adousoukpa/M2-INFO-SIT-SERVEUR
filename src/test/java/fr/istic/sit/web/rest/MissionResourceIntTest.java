@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -41,11 +42,11 @@ public class MissionResourceIntTest {
     private static final String DEFAULT_TITRE = "AAAAAAAAAA";
     private static final String UPDATED_TITRE = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_DATE_DEBUT = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATE_DEBUT = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDateTime DEFAULT_DATE_DEBUT = LocalDateTime.of(2018,01,01,01,01,01);
+    private static final LocalDateTime UPDATED_DATE_DEBUT = LocalDateTime.now(ZoneId.systemDefault());
 
-    private static final LocalDate DEFAULT_DATE_FIN = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATE_FIN = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDateTime DEFAULT_DATE_FIN = LocalDateTime.of(2018,01,01,01,01,01);
+    private static final LocalDateTime UPDATED_DATE_FIN = LocalDateTime.now(ZoneId.systemDefault());
 
     @Autowired
     private MissionRepository missionRepository;
