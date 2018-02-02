@@ -84,7 +84,7 @@ public class MissionResource {
     }
 
     /**
-     * PUT  /missions/addLocalisation/:id : Ajoute une localisation à la mission passée en paramètre
+     * PUT  /missions/:id/addLocalisation : Ajoute une localisation à la mission passée en paramètre
      *
      * @param id : id de la mission a modifier
      * @param localisation : localisation a ajouter
@@ -93,14 +93,17 @@ public class MissionResource {
      * or with status 500 (Internal Server Error) if the mission couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/missions/addLocalisation/{id}")
+    @PutMapping("/missions/{id}/addLocalisation")
     @Timed
     public ResponseEntity<Mission> addLocalisation(@PathVariable String id,@RequestBody Localisation localisation) throws URISyntaxException {
         log.debug("REST request : Ajout de la localisation {} à la mission d'id {}", localisation, id);
         log.trace("Récupération de la mission");
         Mission mission = missionRepository.findOne(id);
         if(mission == null){
-            throw new BadRequestAlertException("La mission est introuvable. L'id donné en paramètre ne permet pas de récupérer une mission",ENTITY_NAME,"id-noref");
+            throw new BadRequestAlertException("La mission est introuvable. L'id donné en paramètre ne permet pas de récupérer une mission",ENTITY_NAME,"idnoref");
+        }
+        if(localisation.getId()!=null){
+            throw new BadRequestAlertException("Une localisation avec un id non null ne peut être ajoutée à une mission",ENTITY_NAME,"idexists");
         }
         mission.addLocalisation(localisation);
         Mission result = missionRepository.save(mission);
