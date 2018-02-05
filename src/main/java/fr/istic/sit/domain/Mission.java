@@ -102,6 +102,13 @@ public class Mission implements Serializable {
         orderList.add(order);
     }
 
+    public void addLocationDrone(LocationDrone locationDrone){
+        if(locationDroneList==null){
+            locationDroneList = new ArrayList<>();
+        }
+        locationDroneList.add(locationDrone);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
