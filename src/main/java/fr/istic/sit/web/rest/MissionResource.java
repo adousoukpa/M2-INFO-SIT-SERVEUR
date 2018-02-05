@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import fr.istic.sit.domain.Localisation;
 import fr.istic.sit.domain.Mission;
 
+import fr.istic.sit.domain.Order;
 import fr.istic.sit.repository.MissionRepository;
 import fr.istic.sit.web.rest.errors.BadRequestAlertException;
 import fr.istic.sit.web.rest.util.HeaderUtil;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,7 +98,7 @@ public class MissionResource {
      * PUT  /missions/:id/orderMove : Crée un ordre de mission pour déplacer le drone sans photo
      *
      * @param id : id de la mission a modifier
-     * @param localisation : localisation a ajouter
+     * @param location : localisation a ajouter
      * @return the ResponseEntity with status 200 (OK) and with body the updated mission,
      * or with status 400 (Bad Request) if the mission is not valid,
      * or with status 500 (Internal Server Error) if the mission couldn't be updated
@@ -110,17 +112,16 @@ public class MissionResource {
         responseContainer = "ResponseEntity")
     @PutMapping("/missions/{id}/orderMove")
     @Timed
-        public ResponseEntity<Mission> orderMove(@PathVariable String id,@RequestBody Localisation localisation) throws URISyntaxException {
-        log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", localisation, id);
+        public ResponseEntity<Mission> orderMove(@PathVariable String id,@RequestBody Localisation location) throws URISyntaxException {
+        log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", location, id);
         log.trace("Récupération de la mission");
         Mission mission = missionRepository.findOne(id);
         if(mission == null){
             throw new BadRequestAlertException("La mission est introuvable. L'id donné en paramètre ne permet pas de récupérer une mission",ENTITY_NAME,"idnoref");
         }
-        if(localisation.getId()!=null){
-            throw new BadRequestAlertException("Une localisation avec un id non null ne peut être ajoutée à une mission",ENTITY_NAME,"idexists");
-        }
-        mission.addLocalisation(localisation);
+
+        mission.addOrder(constructOrderWithLocation(location,false));
+
         Mission result = missionRepository.save(mission);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, mission.getId().toString()))
@@ -131,7 +132,7 @@ public class MissionResource {
      * PUT  /missions/:id/orderMovePicture : Crée un ordre de mission pour déplacer le drone avec photo
      *
      * @param id : id de la mission a modifier
-     * @param localisation : localisation a ajouter
+     * @param location : localisation a ajouter
      * @return the ResponseEntity with status 200 (OK) and with body the updated mission,
      * or with status 400 (Bad Request) if the mission is not valid,
      * or with status 500 (Internal Server Error) if the mission couldn't be updated
@@ -145,21 +146,36 @@ public class MissionResource {
         responseContainer = "ResponseEntity")
     @PutMapping("/missions/{id}/orderMovePicture")
     @Timed
-    public ResponseEntity<Mission> orderMovePicture(@PathVariable String id,@RequestBody Localisation localisation) throws URISyntaxException {
-        log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", localisation, id);
+    public ResponseEntity<Mission> orderMovePicture(@PathVariable String id,@RequestBody Localisation location) throws URISyntaxException {
+        log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", location, id);
         log.trace("Récupération de la mission");
         Mission mission = missionRepository.findOne(id);
         if(mission == null){
             throw new BadRequestAlertException("La mission est introuvable. L'id donné en paramètre ne permet pas de récupérer une mission",ENTITY_NAME,"idnoref");
         }
-        if(localisation.getId()!=null){
-            throw new BadRequestAlertException("Une localisation avec un id non null ne peut être ajoutée à une mission",ENTITY_NAME,"idexists");
-        }
-        mission.addLocalisation(localisation);
+
+        mission.addOrder(constructOrderWithLocation(location,true));
+
         Mission result = missionRepository.save(mission);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, mission.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * Construit un order avec une localisation avec les infos necessaires
+     * @param location
+     * @param withPicture
+     * @return
+     */
+    private Order constructOrderWithLocation(Localisation location, boolean withPicture){
+        if(location==null){
+            throw new BadRequestAlertException("La localisation transmise à la requête est null",ENTITY_NAME,"location-not-found");
+        }
+
+        //Construction de l'ordre avec la localisation transmise
+        Order order = new Order(location,withPicture, LocalDateTime.now());
+        return order;
     }
 
     /**
