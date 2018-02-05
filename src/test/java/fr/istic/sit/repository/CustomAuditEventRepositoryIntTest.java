@@ -3,7 +3,7 @@ package fr.istic.sit.repository;
 import fr.istic.sit.ServeurApp;
 import fr.istic.sit.config.Constants;
 import fr.istic.sit.config.audit.AuditEventConverter;
-import fr.istic.sit.domain.PersistentAuditEvent;
+import fr.istic.sit.domain.jhispter.PersistentAuditEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

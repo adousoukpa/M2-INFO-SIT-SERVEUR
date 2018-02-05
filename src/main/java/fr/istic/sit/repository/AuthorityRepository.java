@@ -1,6 +1,6 @@
 package fr.istic.sit.repository;
 
-import fr.istic.sit.domain.Authority;
+import fr.istic.sit.domain.jhispter.Authority;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

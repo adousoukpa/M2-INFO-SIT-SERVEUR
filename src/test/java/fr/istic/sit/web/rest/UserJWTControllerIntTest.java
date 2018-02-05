@@ -1,7 +1,7 @@
 package fr.istic.sit.web.rest;
 
 import fr.istic.sit.ServeurApp;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.repository.UserRepository;
 import fr.istic.sit.security.jwt.TokenProvider;
 import fr.istic.sit.web.rest.vm.LoginVM;

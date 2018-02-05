@@ -1,6 +1,6 @@
 package fr.istic.sit.repository;
 
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.User;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

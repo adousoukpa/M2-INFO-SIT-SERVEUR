@@ -1,6 +1,6 @@
 package fr.istic.sit.security;
 
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

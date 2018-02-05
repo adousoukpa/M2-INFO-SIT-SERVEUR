@@ -2,7 +2,7 @@ package fr.istic.sit.repository;
 
 import fr.istic.sit.config.Constants;
 import fr.istic.sit.config.audit.AuditEventConverter;
-import fr.istic.sit.domain.PersistentAuditEvent;
+import fr.istic.sit.domain.jhispter.PersistentAuditEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
