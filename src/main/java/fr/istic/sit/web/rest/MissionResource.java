@@ -9,6 +9,7 @@ import fr.istic.sit.web.rest.errors.BadRequestAlertException;
 import fr.istic.sit.web.rest.util.HeaderUtil;
 import fr.istic.sit.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -48,6 +49,10 @@ public class MissionResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new mission, or with status 400 (Bad Request) if the mission has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
+    @ApiOperation(value = "Création d'une nouvelle mission",
+        notes = "Création d'une nouvelle mission avec en retour d'opération la mission ainsi créée",
+        response = Mission.class,
+        responseContainer = "ResponseEntity")
     @PostMapping("/missions")
     @Timed
     public ResponseEntity<Mission> createMission(@RequestBody Mission mission) throws URISyntaxException {
@@ -70,6 +75,10 @@ public class MissionResource {
      * or with status 500 (Internal Server Error) if the mission couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
+    @ApiOperation(value = "Mise à jour d'une mission",
+        notes = "Mise à jour d'une mission avec en retour d'opération la mission mise à jour",
+        response = Mission.class,
+        responseContainer = "ResponseEntity")
     @PutMapping("/missions")
     @Timed
     public ResponseEntity<Mission> updateMission(@RequestBody Mission mission) throws URISyntaxException {
@@ -84,7 +93,7 @@ public class MissionResource {
     }
 
     /**
-     * PUT  /missions/:id/addLocalisation : Ajoute une localisation à la mission passée en paramètre
+     * PUT  /missions/:id/orderMove : Crée un ordre de mission pour déplacer le drone sans photo
      *
      * @param id : id de la mission a modifier
      * @param localisation : localisation a ajouter
@@ -93,10 +102,51 @@ public class MissionResource {
      * or with status 500 (Internal Server Error) if the mission couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/missions/{id}/addLocalisation")
+    @ApiOperation(value = "Crée un ordre de mission pour déplacer le drone sans photo",
+        notes = "Crée un ordre de mission pour déplacer le drone sans photo. " +
+        "La localisation cible est donné dans le corps de la requête. " +
+        "Retourne la mission mise à jour en paramètre",
+        response = Mission.class,
+        responseContainer = "ResponseEntity")
+    @PutMapping("/missions/{id}/orderMove")
     @Timed
-    public ResponseEntity<Mission> addLocalisation(@PathVariable String id,@RequestBody Localisation localisation) throws URISyntaxException {
-        log.debug("REST request : Ajout de la localisation {} à la mission d'id {}", localisation, id);
+        public ResponseEntity<Mission> orderMove(@PathVariable String id,@RequestBody Localisation localisation) throws URISyntaxException {
+        log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", localisation, id);
+        log.trace("Récupération de la mission");
+        Mission mission = missionRepository.findOne(id);
+        if(mission == null){
+            throw new BadRequestAlertException("La mission est introuvable. L'id donné en paramètre ne permet pas de récupérer une mission",ENTITY_NAME,"idnoref");
+        }
+        if(localisation.getId()!=null){
+            throw new BadRequestAlertException("Une localisation avec un id non null ne peut être ajoutée à une mission",ENTITY_NAME,"idexists");
+        }
+        mission.addLocalisation(localisation);
+        Mission result = missionRepository.save(mission);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, mission.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * PUT  /missions/:id/orderMovePicture : Crée un ordre de mission pour déplacer le drone avec photo
+     *
+     * @param id : id de la mission a modifier
+     * @param localisation : localisation a ajouter
+     * @return the ResponseEntity with status 200 (OK) and with body the updated mission,
+     * or with status 400 (Bad Request) if the mission is not valid,
+     * or with status 500 (Internal Server Error) if the mission couldn't be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @ApiOperation(value = "Crée un ordre de mission pour déplacer le drone avec photo",
+        notes = "Crée un ordre de mission pour déplacer le drone avec photo. " +
+            "La localisation cible est donné dans le corps de la requête. " +
+            "Retourne la mission mise à jour en paramètre",
+        response = Mission.class,
+        responseContainer = "ResponseEntity")
+    @PutMapping("/missions/{id}/orderMovePicture")
+    @Timed
+    public ResponseEntity<Mission> orderMovePicture(@PathVariable String id,@RequestBody Localisation localisation) throws URISyntaxException {
+        log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", localisation, id);
         log.trace("Récupération de la mission");
         Mission mission = missionRepository.findOne(id);
         if(mission == null){
@@ -120,7 +170,13 @@ public class MissionResource {
      */
     @GetMapping("/missions")
     @Timed
+    @ApiOperation(value = "Retourne l'intégralité des missions",
+        notes = "Les missions retournées par la requête ne comporte pas de localisation pour pas" +
+            "surcharger le corps de la réponse",
+        response = Mission.class,
+        responseContainer = "ResponseEntity")
     public ResponseEntity<List<Mission>> getAllMissions(Pageable pageable) {
+        // TODO : Enlever les localisations du retour
         log.debug("REST request to get a page of Missions");
         Page<Mission> page = missionRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/missions");
@@ -133,6 +189,10 @@ public class MissionResource {
      * @param id the id of the mission to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the mission, or with status 404 (Not Found)
      */
+    @ApiOperation(value = "Retourne la mission avec l'ID spécifié",
+        notes = "La mission retournée comporte les localisations demandées.",
+        response = Mission.class,
+        responseContainer = "ResponseEntity")
     @GetMapping("/missions/{id}")
     @Timed
     public ResponseEntity<Mission> getMission(@PathVariable String id) {
@@ -147,6 +207,11 @@ public class MissionResource {
      * @param id the id of the mission to delete
      * @return the ResponseEntity with status 200 (OK)
      */
+    @ApiOperation(value = "Supprime la mission avec l'ID de mission spécifié",
+        notes = "La requête ne retourne rien, le code de statut de réponse permet de " +
+            "déterminer si la mission a bien été supprimée.",
+        response = Mission.class,
+        responseContainer = "ResponseEntity")
     @DeleteMapping("/missions/{id}")
     @Timed
     public ResponseEntity<Void> deleteMission(@PathVariable String id) {
