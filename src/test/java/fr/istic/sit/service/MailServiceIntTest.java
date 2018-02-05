@@ -2,7 +2,7 @@ package fr.istic.sit.service;
 import fr.istic.sit.config.Constants;
 
 import fr.istic.sit.ServeurApp;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.User;
 import io.github.jhipster.config.JHipsterProperties;
 import org.junit.Before;
 import org.junit.Test;

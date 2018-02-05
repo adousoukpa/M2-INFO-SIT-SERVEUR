@@ -1,7 +1,7 @@
 package fr.istic.sit.service;
 
-import fr.istic.sit.domain.Authority;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.Authority;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.repository.AuthorityRepository;
 import fr.istic.sit.config.Constants;
 import fr.istic.sit.repository.UserRepository;

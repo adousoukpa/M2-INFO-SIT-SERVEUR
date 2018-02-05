@@ -2,7 +2,7 @@ package fr.istic.sit.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.repository.UserRepository;
 import fr.istic.sit.security.SecurityUtils;
 import fr.istic.sit.service.MailService;
