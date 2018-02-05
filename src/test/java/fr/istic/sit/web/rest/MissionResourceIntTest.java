@@ -2,7 +2,7 @@ package fr.istic.sit.web.rest;
 
 import fr.istic.sit.ServeurApp;
 
-import fr.istic.sit.domain.Localisation;
+import fr.istic.sit.domain.Location;
 import fr.istic.sit.domain.Mission;
 import fr.istic.sit.repository.MissionRepository;
 import fr.istic.sit.web.rest.errors.ExceptionTranslator;
@@ -214,7 +214,7 @@ public class MissionResourceIntTest {
         missionRepository.save(updatedMission);
 
         //On crée une nouvelle location pour ajouter un order via le REST
-        Localisation l = new Localisation();
+        Location l = new Location();
         l.setAltitude(13.0);
         l.setLatitude(13.5165181);
         l.setLongitude(-61.651984913);
@@ -245,7 +245,7 @@ public class MissionResourceIntTest {
         missionRepository.save(updatedMission);
 
         //On crée une nouvelle location pour ajouter un order via le REST
-        Localisation l = new Localisation();
+        Location l = new Location();
         l.setAltitude(13.0);
         l.setLatitude(13.5165181);
         l.setLongitude(-61.651984913);
@@ -269,7 +269,7 @@ public class MissionResourceIntTest {
 
         String idNotExisting = "EVNZNVIEVE11861481C";
 
-        Localisation l = new Localisation();
+        Location l = new Location();
         l.setAltitude(13.0);
         l.setLatitude(13.5165181);
         l.setLongitude(-61.651984913);
@@ -285,7 +285,7 @@ public class MissionResourceIntTest {
 
         String idNotExisting = "EVNZNVIEVE11861481C";
 
-        Localisation l = new Localisation();
+        Location l = new Location();
         l.setAltitude(13.0);
         l.setLatitude(13.5165181);
         l.setLongitude(-61.651984913);

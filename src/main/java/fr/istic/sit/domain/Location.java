@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * Une localisation définie avec une latitude, longitude et une altitude
  */
-public class Localisation implements Serializable {
+public class Location implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,7 +20,7 @@ public class Localisation implements Serializable {
         return latitude;
     }
 
-    public Localisation latitude(Double latitude) {
+    public Location latitude(Double latitude) {
         this.latitude = latitude;
         return this;
     }
@@ -33,7 +33,7 @@ public class Localisation implements Serializable {
         return longitude;
     }
 
-    public Localisation longitude(Double longitude) {
+    public Location longitude(Double longitude) {
         this.longitude = longitude;
         return this;
     }
@@ -46,7 +46,7 @@ public class Localisation implements Serializable {
         return altitude;
     }
 
-    public Localisation altitude(Double altitude) {
+    public Location altitude(Double altitude) {
         this.altitude = altitude;
         return this;
     }
@@ -63,14 +63,14 @@ public class Localisation implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Localisation localisation = (Localisation) o;
-        if (localisation == null) {
+        Location location = (Location) o;
+        if (location == null) {
             return false;
         }
 
-        boolean latEquals = getLatitude() == localisation.getLatitude();
-        boolean longEquals= getLongitude() == localisation.getLongitude();
-        boolean altEquals = getAltitude() == localisation.getAltitude();
+        boolean latEquals = getLatitude() == location.getLatitude();
+        boolean longEquals= getLongitude() == location.getLongitude();
+        boolean altEquals = getAltitude() == location.getAltitude();
 
         return latEquals && longEquals && altEquals;
     }

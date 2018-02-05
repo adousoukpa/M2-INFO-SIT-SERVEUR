@@ -1,7 +1,7 @@
 package fr.istic.sit.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import fr.istic.sit.domain.Localisation;
+import fr.istic.sit.domain.Location;
 import fr.istic.sit.domain.Mission;
 
 import fr.istic.sit.domain.Order;
@@ -112,7 +112,7 @@ public class MissionResource {
         responseContainer = "ResponseEntity")
     @PutMapping("/missions/{id}/orderMove")
     @Timed
-        public ResponseEntity<Mission> orderMove(@PathVariable String id,@RequestBody Localisation location) throws URISyntaxException {
+        public ResponseEntity<Mission> orderMove(@PathVariable String id,@RequestBody Location location) throws URISyntaxException {
         log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", location, id);
         log.trace("Récupération de la mission");
         Mission mission = missionRepository.findOne(id);
@@ -146,7 +146,7 @@ public class MissionResource {
         responseContainer = "ResponseEntity")
     @PutMapping("/missions/{id}/orderMovePicture")
     @Timed
-    public ResponseEntity<Mission> orderMovePicture(@PathVariable String id,@RequestBody Localisation location) throws URISyntaxException {
+    public ResponseEntity<Mission> orderMovePicture(@PathVariable String id,@RequestBody Location location) throws URISyntaxException {
         log.debug("REST request : Crée un ordre de mission à la mission d'id {}. Déplacement de la mission {} ", location, id);
         log.trace("Récupération de la mission");
         Mission mission = missionRepository.findOne(id);
@@ -168,7 +168,7 @@ public class MissionResource {
      * @param withPicture
      * @return
      */
-    private Order constructOrderWithLocation(Localisation location, boolean withPicture){
+    private Order constructOrderWithLocation(Location location, boolean withPicture){
         if(location==null){
             throw new BadRequestAlertException("La localisation transmise à la requête est null",ENTITY_NAME,"location-not-found");
         }

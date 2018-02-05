@@ -7,23 +7,23 @@ import java.time.LocalDateTime;
  */
 public class Order {
 
-    Localisation location;
+    Location location;
 
     boolean takePicture;
 
     LocalDateTime time;
 
-    public Order(Localisation location, boolean takePicture, LocalDateTime time) {
+    public Order(Location location, boolean takePicture, LocalDateTime time) {
         this.location = location;
         this.takePicture = takePicture;
         this.time = time;
     }
 
-    public Localisation getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(Localisation location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 

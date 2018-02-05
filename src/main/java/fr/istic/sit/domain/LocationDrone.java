@@ -2,7 +2,7 @@ package fr.istic.sit.domain;
 
 import java.time.LocalDateTime;
 
-public class LocationDrone extends Localisation{
+public class LocationDrone extends Location{
 
     LocalDateTime time;
 
