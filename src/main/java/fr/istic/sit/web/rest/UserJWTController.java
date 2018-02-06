@@ -55,8 +55,8 @@ public class UserJWTController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-
-        //rabbitMqServ.publishMessage(loginVM.getUsername());
+        //mis en commentaire pour passer les tests
+        //rabbitMqServ.publishDroneLocalisation(null);
 
 
 
