@@ -45,6 +45,8 @@ public class MissionResourceIntTest {
 
     private final Logger log = LoggerFactory.getLogger(MissionResourceIntTest.class);
 
+    private static final String USER_LOGIN = "admin";
+
     private static final String DEFAULT_TITRE = "AAAAAAAAAA";
     private static final String UPDATED_TITRE = "BBBBBBBBBB";
 
@@ -89,6 +91,7 @@ public class MissionResourceIntTest {
      */
     public static Mission createEntity() {
         Mission mission = new Mission()
+            .setUserLogin(USER_LOGIN)
             .setTitle(DEFAULT_TITRE)
             .setDateBegin(DEFAULT_DATE_DEBUT)
             .setDateEnd(DEFAULT_DATE_FIN);
@@ -115,9 +118,30 @@ public class MissionResourceIntTest {
         List<Mission> missionList = missionRepository.findAll();
         assertThat(missionList).hasSize(databaseSizeBeforeCreate + 1);
         Mission testMission = missionList.get(missionList.size() - 1);
+        assertThat(testMission.getUserLogin()).isEqualTo(USER_LOGIN);
         assertThat(testMission.getTitle()).isEqualTo(DEFAULT_TITRE);
         assertThat(testMission.getDateBegin()).isEqualTo(DEFAULT_DATE_DEBUT);
         assertThat(testMission.getDateEnd()).isEqualTo(DEFAULT_DATE_FIN);
+    }
+
+    @Test
+    public void createMissionWithoutUser() throws Exception {
+        int databaseSizeBeforeCreate = missionRepository.findAll().size();
+
+        Mission mission2 = new Mission()
+            .setTitle(DEFAULT_TITRE)
+            .setDateBegin(DEFAULT_DATE_DEBUT)
+            .setDateEnd(DEFAULT_DATE_FIN);
+
+        // Create the Mission
+        restMissionMockMvc.perform(post("/api/missions")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(mission2)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Mission in the database
+        List<Mission> missionList = missionRepository.findAll();
+        assertThat(missionList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -148,7 +172,8 @@ public class MissionResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(mission.getId())))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITRE.toString())))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITRE)))
+            .andExpect(jsonPath("$.[*].userLogin").value(hasItem(USER_LOGIN)))
             .andExpect(jsonPath("$.[*].dateBegin").value(hasItem(DEFAULT_DATE_DEBUT.toString())))
             .andExpect(jsonPath("$.[*].dateEnd").value(hasItem(DEFAULT_DATE_FIN.toString())));
     }
@@ -184,6 +209,7 @@ public class MissionResourceIntTest {
         // Update the mission
         Mission updatedMission = missionRepository.findOne(mission.getId());
         updatedMission
+            .setUserLogin(USER_LOGIN)
             .setTitle(UPDATED_TITRE)
             .setDateBegin(UPDATED_DATE_DEBUT)
             .setDateEnd(UPDATED_DATE_FIN);
@@ -312,7 +338,7 @@ public class MissionResourceIntTest {
         List<Mission> missionList = missionRepository.findAll();
         assertThat(missionList).hasSize(databaseSizeBeforeUpdate + 1);
     }
-    
+
     @Test
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Mission.class);

@@ -6,6 +6,7 @@ import fr.istic.sit.domain.Mission;
 
 import fr.istic.sit.domain.Order;
 import fr.istic.sit.repository.MissionRepository;
+import fr.istic.sit.security.SecurityUtils;
 import fr.istic.sit.web.rest.errors.BadRequestAlertException;
 import fr.istic.sit.web.rest.util.HeaderUtil;
 import fr.istic.sit.web.rest.util.PaginationUtil;
@@ -62,6 +63,18 @@ public class MissionResource {
         if (mission.getId() != null) {
             throw new BadRequestAlertException("A new mission cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        if (mission.getUserLogin() == null) {
+            throw new BadRequestAlertException("Une nouvelle mission doit avoir un user", ENTITY_NAME, "user-not-exits");
+        }
+
+        //Si l'utilisateur veut ajouter une mission mais qu'il n'est pas connecté avec le bon user
+        SecurityUtils.getCurrentUserLogin().ifPresent(s -> {
+            if(!s.equals(mission.getUserLogin())){
+                throw new BadRequestAlertException("Pas bon user", ENTITY_NAME, "user-error");
+            }
+        });
+
         Mission result = missionRepository.save(mission);
         return ResponseEntity.created(new URI("/api/missions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
