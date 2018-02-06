@@ -216,23 +216,4 @@ public class MissionResource {
         Mission mission = missionRepository.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(mission));
     }
-
-    /**
-     * DELETE  /missions/:id : delete the "id" mission.
-     *
-     * @param id the id of the mission to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @ApiOperation(value = "Supprime la mission avec l'ID de mission spécifié",
-        notes = "La requête ne retourne rien, le code de statut de réponse permet de " +
-            "déterminer si la mission a bien été supprimée.",
-        response = Mission.class,
-        responseContainer = "ResponseEntity")
-    @DeleteMapping("/missions/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteMission(@PathVariable String id) {
-        log.debug("REST request to delete Mission : {}", id);
-        missionRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
-    }
 }
