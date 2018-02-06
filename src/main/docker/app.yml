@@ -13,3 +13,8 @@ services:
         extends:
             file: mongodb.yml
             service: serveur-mongodb
+
+    serveur-rabbitmq:
+            extends:
+                file: rabbitmq.yml
+                service: serveur-rabbitmq
