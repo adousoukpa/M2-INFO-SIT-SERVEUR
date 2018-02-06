@@ -56,7 +56,7 @@ public class UserJWTController {
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
 
-        rabbitMqServ.publishMessage(loginVM.getUsername());
+        //rabbitMqServ.publishMessage(loginVM.getUsername());
 
 
 
