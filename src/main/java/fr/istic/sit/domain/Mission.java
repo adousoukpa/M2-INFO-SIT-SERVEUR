@@ -21,20 +21,23 @@ public class Mission implements Serializable {
     @Id
     private String id;
 
-    @Field("titre")
+    @Field("title")
     private String title;
 
-    @Field("dateDebut")
+    @Field("dateBegin")
     private LocalDateTime dateBegin;
 
-    @Field("dateFin")
+    @Field("dateEnd")
     private LocalDateTime dateEnd;
 
-    @Field("ordrList")
+    @Field("orderList")
     private List<Order> orderList;
 
     @Field("localisationDroneList")
     private List<LocationDrone> locationDroneList;
+
+    @Field("userLogin")
+    private String userLogin;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
@@ -92,6 +95,14 @@ public class Mission implements Serializable {
         return this;
     }
 
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public Mission setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+        return this;
+    }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

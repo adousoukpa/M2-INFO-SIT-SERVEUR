@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 @Repository
 public interface MissionRepository extends MongoRepository<Mission, String> {
 
+    // FIXME : Ne marche pas pour le moment
     @Query(fields="{ 'title' : 1, 'dateBegin' : 1,'dateEnd' : 1}")
     Page<Mission> findAllOrderByDateBegin(Pageable pageable);
 }
