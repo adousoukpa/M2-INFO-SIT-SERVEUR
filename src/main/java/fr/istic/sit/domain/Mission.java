@@ -1,11 +1,12 @@
 package fr.istic.sit.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,74 +22,92 @@ public class Mission implements Serializable {
     private String id;
 
     @Field("titre")
-    private String titre;
+    private String title;
 
-    @Field("date_debut")
-    private LocalDate dateDebut;
+    @Field("dateDebut")
+    private LocalDateTime dateBegin;
 
-    @Field("date_fin")
-    private LocalDate dateFin;
+    @Field("dateFin")
+    private LocalDateTime dateEnd;
 
-    @Field("localisationList")
-    private List<Localisation> localisationList;
+    @Field("ordrList")
+    private List<Order> orderList;
+
+    @Field("localisationDroneList")
+    private List<LocationDrone> locationDroneList;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public Mission setId(String id) {
         this.id = id;
-    }
-
-    public String getTitre() {
-        return titre;
-    }
-
-    public Mission titre(String titre) {
-        this.titre = titre;
         return this;
     }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
+    public String getTitle() {
+        return title;
     }
 
-    public LocalDate getDateDebut() {
-        return dateDebut;
-    }
-
-    public Mission dateDebut(LocalDate dateDebut) {
-        this.dateDebut = dateDebut;
+    public Mission setTitle(String title) {
+        this.title = title;
         return this;
     }
 
-    public void setDateDebut(LocalDate dateDebut) {
-        this.dateDebut = dateDebut;
+    public LocalDateTime getDateBegin() {
+        return dateBegin;
     }
 
-    public LocalDate getDateFin() {
-        return dateFin;
-    }
-
-    public Mission dateFin(LocalDate dateFin) {
-        this.dateFin = dateFin;
+    public Mission setDateBegin(LocalDateTime dateBegin) {
+        this.dateBegin = dateBegin;
         return this;
     }
 
-    public void setDateFin(LocalDate dateFin) {
-        this.dateFin = dateFin;
+    public LocalDateTime getDateEnd() {
+        return dateEnd;
     }
 
-    public List<Localisation> getLocalisationList() {
-        return localisationList;
+    public Mission setDateEnd(LocalDateTime dateEnd) {
+        this.dateEnd = dateEnd;
+        return this;
     }
 
-    public void setLocalisationList(List<Localisation> localisationList) {
-        this.localisationList = localisationList;
+    public List<Order> getOrderList() {
+        return orderList;
     }
+
+    public Mission setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
+        return this;
+    }
+
+    public List<LocationDrone> getLocationDroneList() {
+        return locationDroneList;
+    }
+
+    public Mission setLocationDroneList(List<LocationDrone> locationDroneList) {
+        this.locationDroneList = locationDroneList;
+        return this;
+    }
+
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public void addOrder(Order order){
+        if(orderList==null){
+            orderList = new ArrayList<>();
+        }
+        orderList.add(order);
+    }
+
+    public void addLocationDrone(LocationDrone locationDrone){
+        if(locationDroneList==null){
+            locationDroneList = new ArrayList<>();
+        }
+        locationDroneList.add(locationDrone);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -113,10 +132,12 @@ public class Mission implements Serializable {
     @Override
     public String toString() {
         return "Mission{" +
-            "id=" + getId() +
-            ", titre='" + getTitre() + "'" +
-            ", dateDebut='" + getDateDebut() + "'" +
-            ", dateFin='" + getDateFin() + "'" +
-            "}";
+            "id='" + id + '\'' +
+            ", title='" + title + '\'' +
+            ", dateBegin=" + dateBegin +
+            ", dateEnd=" + dateEnd +
+            ", orderList=" + orderList +
+            ", locationDroneList=" + locationDroneList +
+            '}';
     }
 }
