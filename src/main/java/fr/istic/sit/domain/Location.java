@@ -1,46 +1,26 @@
 package fr.istic.sit.domain;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A Localisation.
+ * Une localisation définie avec une latitude, longitude et une altitude
  */
-@Document(collection = "localisation")
-public class Localisation implements Serializable {
+public class Location implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    private String id;
-
-    @Field("latitude")
     private Double latitude;
 
-    @Field("longitude")
     private Double longitude;
 
-    @Field("altitude")
     private Double altitude;
-
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Double getLatitude() {
         return latitude;
     }
 
-    public Localisation latitude(Double latitude) {
+    public Location latitude(Double latitude) {
         this.latitude = latitude;
         return this;
     }
@@ -53,7 +33,7 @@ public class Localisation implements Serializable {
         return longitude;
     }
 
-    public Localisation longitude(Double longitude) {
+    public Location longitude(Double longitude) {
         this.longitude = longitude;
         return this;
     }
@@ -66,7 +46,7 @@ public class Localisation implements Serializable {
         return altitude;
     }
 
-    public Localisation altitude(Double altitude) {
+    public Location altitude(Double altitude) {
         this.altitude = altitude;
         return this;
     }
@@ -74,7 +54,6 @@ public class Localisation implements Serializable {
     public void setAltitude(Double altitude) {
         this.altitude = altitude;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -84,23 +63,27 @@ public class Localisation implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Localisation localisation = (Localisation) o;
-        if (localisation.getId() == null || getId() == null) {
+        Location location = (Location) o;
+        if (location == null) {
             return false;
         }
-        return Objects.equals(getId(), localisation.getId());
+
+        boolean latEquals = getLatitude() == location.getLatitude();
+        boolean longEquals= getLongitude() == location.getLongitude();
+        boolean altEquals = getAltitude() == location.getAltitude();
+
+        return latEquals && longEquals && altEquals;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return Objects.hashCode(getLatitude()+getLongitude()+getAltitude());
     }
 
     @Override
     public String toString() {
         return "Localisation{" +
-            "id=" + getId() +
-            ", latitude=" + getLatitude() +
+            " latitude=" + getLatitude() +
             ", longitude=" + getLongitude() +
             ", altitude=" + getAltitude() +
             "}";
