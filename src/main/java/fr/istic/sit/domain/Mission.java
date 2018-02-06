@@ -24,16 +24,16 @@ public class Mission implements Serializable {
     @Field("titre")
     private String title;
 
-    @Field("date_debut")
+    @Field("dateDebut")
     private LocalDateTime dateBegin;
 
-    @Field("date_fin")
+    @Field("dateFin")
     private LocalDateTime dateEnd;
 
-    @Field("ordre_list")
+    @Field("ordrList")
     private List<Order> orderList;
 
-    @Field("localisation_drone_list")
+    @Field("localisationDroneList")
     private List<LocationDrone> locationDroneList;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
