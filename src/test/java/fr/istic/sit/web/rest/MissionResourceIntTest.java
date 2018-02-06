@@ -312,23 +312,7 @@ public class MissionResourceIntTest {
         List<Mission> missionList = missionRepository.findAll();
         assertThat(missionList).hasSize(databaseSizeBeforeUpdate + 1);
     }
-
-    @Test
-    public void deleteMission() throws Exception {
-        // Initialize the database
-        missionRepository.save(mission);
-        int databaseSizeBeforeDelete = missionRepository.findAll().size();
-
-        // Get the mission
-        restMissionMockMvc.perform(delete("/api/missions/{id}", mission.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<Mission> missionList = missionRepository.findAll();
-        assertThat(missionList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
+    
     @Test
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Mission.class);
