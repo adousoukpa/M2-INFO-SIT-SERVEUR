@@ -1,4 +1,4 @@
-package fr.istic.sit.domain;
+package fr.istic.sit.domain.jhispter;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -2,6 +2,7 @@ package fr.istic.sit.web.rest;
 
 import fr.istic.sit.ServeurApp;
 
+import fr.istic.sit.domain.Location;
 import fr.istic.sit.domain.Mission;
 import fr.istic.sit.repository.MissionRepository;
 import fr.istic.sit.web.rest.errors.ExceptionTranslator;
@@ -10,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -20,7 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fr.istic.sit.web.rest.TestUtil.createFormattingConversionService;
@@ -38,14 +43,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = ServeurApp.class)
 public class MissionResourceIntTest {
 
+    private final Logger log = LoggerFactory.getLogger(MissionResourceIntTest.class);
+
+    private static final String USER_LOGIN = "admin";
+
     private static final String DEFAULT_TITRE = "AAAAAAAAAA";
     private static final String UPDATED_TITRE = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_DATE_DEBUT = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATE_DEBUT = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDateTime DEFAULT_DATE_DEBUT = LocalDateTime.of(2018,01,01,01,01,01);
+    private static final LocalDateTime UPDATED_DATE_DEBUT = LocalDateTime.now(ZoneId.systemDefault());
 
-    private static final LocalDate DEFAULT_DATE_FIN = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATE_FIN = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDateTime DEFAULT_DATE_FIN = LocalDateTime.of(2018,01,01,01,01,01);
+    private static final LocalDateTime UPDATED_DATE_FIN = LocalDateTime.now(ZoneId.systemDefault());
 
     @Autowired
     private MissionRepository missionRepository;
@@ -82,9 +91,10 @@ public class MissionResourceIntTest {
      */
     public static Mission createEntity() {
         Mission mission = new Mission()
-            .titre(DEFAULT_TITRE)
-            .dateDebut(DEFAULT_DATE_DEBUT)
-            .dateFin(DEFAULT_DATE_FIN);
+            .setUserLogin(USER_LOGIN)
+            .setTitle(DEFAULT_TITRE)
+            .setDateBegin(DEFAULT_DATE_DEBUT)
+            .setDateEnd(DEFAULT_DATE_FIN);
         return mission;
     }
 
@@ -108,9 +118,30 @@ public class MissionResourceIntTest {
         List<Mission> missionList = missionRepository.findAll();
         assertThat(missionList).hasSize(databaseSizeBeforeCreate + 1);
         Mission testMission = missionList.get(missionList.size() - 1);
-        assertThat(testMission.getTitre()).isEqualTo(DEFAULT_TITRE);
-        assertThat(testMission.getDateDebut()).isEqualTo(DEFAULT_DATE_DEBUT);
-        assertThat(testMission.getDateFin()).isEqualTo(DEFAULT_DATE_FIN);
+        assertThat(testMission.getUserLogin()).isEqualTo(USER_LOGIN);
+        assertThat(testMission.getTitle()).isEqualTo(DEFAULT_TITRE);
+        assertThat(testMission.getDateBegin()).isEqualTo(DEFAULT_DATE_DEBUT);
+        assertThat(testMission.getDateEnd()).isEqualTo(DEFAULT_DATE_FIN);
+    }
+
+    @Test
+    public void createMissionWithoutUser() throws Exception {
+        int databaseSizeBeforeCreate = missionRepository.findAll().size();
+
+        Mission mission2 = new Mission()
+            .setTitle(DEFAULT_TITRE)
+            .setDateBegin(DEFAULT_DATE_DEBUT)
+            .setDateEnd(DEFAULT_DATE_FIN);
+
+        // Create the Mission
+        restMissionMockMvc.perform(post("/api/missions")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(mission2)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Mission in the database
+        List<Mission> missionList = missionRepository.findAll();
+        assertThat(missionList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -141,9 +172,10 @@ public class MissionResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(mission.getId())))
-            .andExpect(jsonPath("$.[*].titre").value(hasItem(DEFAULT_TITRE.toString())))
-            .andExpect(jsonPath("$.[*].dateDebut").value(hasItem(DEFAULT_DATE_DEBUT.toString())))
-            .andExpect(jsonPath("$.[*].dateFin").value(hasItem(DEFAULT_DATE_FIN.toString())));
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITRE)))
+            .andExpect(jsonPath("$.[*].userLogin").value(hasItem(USER_LOGIN)))
+            .andExpect(jsonPath("$.[*].dateBegin").value(hasItem(DEFAULT_DATE_DEBUT.toString())))
+            .andExpect(jsonPath("$.[*].dateEnd").value(hasItem(DEFAULT_DATE_FIN.toString())));
     }
 
     @Test
@@ -156,9 +188,9 @@ public class MissionResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(mission.getId()))
-            .andExpect(jsonPath("$.titre").value(DEFAULT_TITRE.toString()))
-            .andExpect(jsonPath("$.dateDebut").value(DEFAULT_DATE_DEBUT.toString()))
-            .andExpect(jsonPath("$.dateFin").value(DEFAULT_DATE_FIN.toString()));
+            .andExpect(jsonPath("$.title").value(DEFAULT_TITRE.toString()))
+            .andExpect(jsonPath("$.dateBegin").value(DEFAULT_DATE_DEBUT.toString()))
+            .andExpect(jsonPath("$.dateEnd").value(DEFAULT_DATE_FIN.toString()));
     }
 
     @Test
@@ -177,9 +209,10 @@ public class MissionResourceIntTest {
         // Update the mission
         Mission updatedMission = missionRepository.findOne(mission.getId());
         updatedMission
-            .titre(UPDATED_TITRE)
-            .dateDebut(UPDATED_DATE_DEBUT)
-            .dateFin(UPDATED_DATE_FIN);
+            .setUserLogin(USER_LOGIN)
+            .setTitle(UPDATED_TITRE)
+            .setDateBegin(UPDATED_DATE_DEBUT)
+            .setDateEnd(UPDATED_DATE_FIN);
 
         restMissionMockMvc.perform(put("/api/missions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -190,9 +223,103 @@ public class MissionResourceIntTest {
         List<Mission> missionList = missionRepository.findAll();
         assertThat(missionList).hasSize(databaseSizeBeforeUpdate);
         Mission testMission = missionList.get(missionList.size() - 1);
-        assertThat(testMission.getTitre()).isEqualTo(UPDATED_TITRE);
-        assertThat(testMission.getDateDebut()).isEqualTo(UPDATED_DATE_DEBUT);
-        assertThat(testMission.getDateFin()).isEqualTo(UPDATED_DATE_FIN);
+        assertThat(testMission.getTitle()).isEqualTo(UPDATED_TITRE);
+        assertThat(testMission.getDateBegin()).isEqualTo(UPDATED_DATE_DEBUT);
+        assertThat(testMission.getDateEnd()).isEqualTo(UPDATED_DATE_FIN);
+    }
+
+    @Test
+    public void addOrder() throws Exception {
+        // Initialize the database
+        missionRepository.save(mission);
+        int databaseSizeBeforeUpdate = missionRepository.findAll().size();
+
+        // Update the mission
+        Mission updatedMission = missionRepository.findOne(mission.getId());
+        updatedMission.setOrderList(new ArrayList<>());
+        missionRepository.save(updatedMission);
+
+        //On crée une nouvelle location pour ajouter un order via le REST
+        Location l = new Location();
+        l.setAltitude(13.0);
+        l.setLatitude(13.5165181);
+        l.setLongitude(-61.651984913);
+        int oldLocalisationSize = updatedMission.getOrderList().size();
+
+        restMissionMockMvc.perform(put("/api/missions/"+updatedMission.getId()+"/orderMove")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(l)))
+            .andExpect(status().isOk());
+
+        // Validate the Mission in the database
+        List<Mission> missionList = missionRepository.findAll();
+        assertThat(missionList).hasSize(databaseSizeBeforeUpdate);
+        Mission testMission = missionList.get(missionList.size() - 1);
+        assertThat(testMission.getOrderList().size()).isEqualTo(oldLocalisationSize+1);
+        assertThat(testMission.getOrderList().get(0).isTakePicture()).isFalse();
+    }
+
+    @Test
+    public void addOrderWithPicture() throws Exception {
+        // Initialize the database
+        missionRepository.save(mission);
+        int databaseSizeBeforeUpdate = missionRepository.findAll().size();
+
+        // Update the mission
+        Mission updatedMission = missionRepository.findOne(mission.getId());
+        updatedMission.setOrderList(new ArrayList<>());
+        missionRepository.save(updatedMission);
+
+        //On crée une nouvelle location pour ajouter un order via le REST
+        Location l = new Location();
+        l.setAltitude(13.0);
+        l.setLatitude(13.5165181);
+        l.setLongitude(-61.651984913);
+        int oldLocalisationSize = updatedMission.getOrderList().size();
+
+        restMissionMockMvc.perform(put("/api/missions/"+updatedMission.getId()+"/orderMovePicture")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(l)))
+            .andExpect(status().isOk());
+
+        // Validate the Mission in the database
+        List<Mission> missionList = missionRepository.findAll();
+        assertThat(missionList).hasSize(databaseSizeBeforeUpdate);
+        Mission testMission = missionList.get(missionList.size() - 1);
+        assertThat(testMission.getOrderList().size()).isEqualTo(oldLocalisationSize+1);
+        assertThat(testMission.getOrderList().get(0).isTakePicture()).isTrue();
+    }
+
+    @Test
+    public void addOrderNonExistingMission() throws Exception {
+
+        String idNotExisting = "EVNZNVIEVE11861481C";
+
+        Location l = new Location();
+        l.setAltitude(13.0);
+        l.setLatitude(13.5165181);
+        l.setLongitude(-61.651984913);
+
+        restMissionMockMvc.perform(put("/api/missions/"+idNotExisting+"/orderMove")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(l)))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addOrderPictureNonExistingMission() throws Exception {
+
+        String idNotExisting = "EVNZNVIEVE11861481C";
+
+        Location l = new Location();
+        l.setAltitude(13.0);
+        l.setLatitude(13.5165181);
+        l.setLongitude(-61.651984913);
+
+        restMissionMockMvc.perform(put("/api/missions/"+idNotExisting+"/orderMovePicture")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(l)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -210,22 +337,6 @@ public class MissionResourceIntTest {
         // Validate the Mission in the database
         List<Mission> missionList = missionRepository.findAll();
         assertThat(missionList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
-
-    @Test
-    public void deleteMission() throws Exception {
-        // Initialize the database
-        missionRepository.save(mission);
-        int databaseSizeBeforeDelete = missionRepository.findAll().size();
-
-        // Get the mission
-        restMissionMockMvc.perform(delete("/api/missions/{id}", mission.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<Mission> missionList = missionRepository.findAll();
-        assertThat(missionList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test

@@ -1,6 +1,6 @@
 package fr.istic.sit.config.audit;
 
-import fr.istic.sit.domain.PersistentAuditEvent;
+import fr.istic.sit.domain.jhispter.PersistentAuditEvent;
 
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;

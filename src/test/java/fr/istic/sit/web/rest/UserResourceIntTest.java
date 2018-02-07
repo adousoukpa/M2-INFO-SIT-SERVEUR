@@ -1,8 +1,8 @@
 package fr.istic.sit.web.rest;
 
 import fr.istic.sit.ServeurApp;
-import fr.istic.sit.domain.Authority;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.Authority;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.repository.UserRepository;
 import fr.istic.sit.security.AuthoritiesConstants;
 import fr.istic.sit.service.MailService;

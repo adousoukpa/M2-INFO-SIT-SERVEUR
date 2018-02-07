@@ -1,7 +1,7 @@
 package fr.istic.sit.service.mapper;
 
-import fr.istic.sit.domain.Authority;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.Authority;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.service.dto.UserDTO;
 
 import org.springframework.stereotype.Service;

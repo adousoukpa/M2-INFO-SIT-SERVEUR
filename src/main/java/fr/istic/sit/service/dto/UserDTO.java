@@ -2,8 +2,8 @@ package fr.istic.sit.service.dto;
 
 import fr.istic.sit.config.Constants;
 
-import fr.istic.sit.domain.Authority;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.Authority;
+import fr.istic.sit.domain.jhispter.User;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;

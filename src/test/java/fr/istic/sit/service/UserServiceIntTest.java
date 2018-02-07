@@ -2,7 +2,7 @@ package fr.istic.sit.service;
 
 import fr.istic.sit.ServeurApp;
 import fr.istic.sit.config.Constants;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.repository.UserRepository;
 import fr.istic.sit.service.dto.UserDTO;
 import fr.istic.sit.service.util.RandomUtil;

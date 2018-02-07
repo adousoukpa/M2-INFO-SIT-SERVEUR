@@ -1,4 +1,4 @@
-package fr.istic.sit.domain;
+package fr.istic.sit.domain.jhispter;
 
 import java.io.Serializable;
 

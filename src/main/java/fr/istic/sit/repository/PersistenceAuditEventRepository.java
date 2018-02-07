@@ -1,6 +1,6 @@
 package fr.istic.sit.repository;
 
-import fr.istic.sit.domain.PersistentAuditEvent;
+import fr.istic.sit.domain.jhispter.PersistentAuditEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

@@ -1,7 +1,7 @@
 package fr.istic.sit.config.dbmigrations;
 
-import fr.istic.sit.domain.Authority;
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.Authority;
+import fr.istic.sit.domain.jhispter.User;
 import fr.istic.sit.security.AuthoritiesConstants;
 
 import com.github.mongobee.changeset.ChangeLog;
@@ -9,8 +9,6 @@ import com.github.mongobee.changeset.ChangeSet;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Creates the initial database setup

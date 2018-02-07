@@ -1,6 +1,6 @@
 package fr.istic.sit.service;
 
-import fr.istic.sit.domain.User;
+import fr.istic.sit.domain.jhispter.User;
 
 import io.github.jhipster.config.JHipsterProperties;
 
