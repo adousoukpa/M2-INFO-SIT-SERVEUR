@@ -66,3 +66,22 @@ Trois containers docker vont être créés :
 
 
 **Attention:** Si certains services tournent sur votre machine sur ces ports cela va créer des erreurs !
+
+
+### Builds Maven
+Pour compiler le projet avec tous les tests (y compris les tests d'intégration) faire la commande suivante
+```
+mvn package -Pprod dockerfile:build
+```
+
+Pour déployer l'image Docker sur Docker hub
+```
+mvn package -Pprod dockerfile:push
+```
+
+Pour lancer un build Sonar sur le serveur Sonar
+```
+mvn test sonar:sonar -Dsonar.host.url=http://148.60.11.57:9000
+```
+
+
