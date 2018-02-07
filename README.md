@@ -63,3 +63,6 @@ Trois containers docker vont être créés :
 - Un service **mongodb** disponible sur le port **27017**
 - Un service **rabbitmq** disponible sur le port **15672** (pour l'IHM WEB) et **5672** pour le service MQ
 - Un service pour le serveur en tant que tel disponible sur le port **8080** avec en accès _admin/admin_
+
+
+**Attention:** Si certains services tournent sur votre machine sur ces ports cela va créer des erreurs !
