@@ -46,3 +46,13 @@ Pour accéder à l'API protégée par un authentification JWT passé le token da
 ```shell
 curl -H "Authorization: Bearer $id_token" "http://localhost:8080/api/users/"
 ```
+
+### Lancer le serveur avec docker
+Récupérer le fichier <code>src/main/docker/app.yml</code>
+
+Lancer la commande
+```
+docker-compose -f src/main/docker/app.yml up
+```
+
+**Prérequis:** Avoir les dernières versions de **docker** et de **docker-compose**
