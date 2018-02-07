@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-@Service
+/*@Service
 public class EventPublisherService {
 
     @Autowired
@@ -32,4 +32,4 @@ public class EventPublisherService {
 
     }
 
-}
+}*/
