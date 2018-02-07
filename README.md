@@ -46,3 +46,42 @@ Pour accéder à l'API protégée par un authentification JWT passé le token da
 ```shell
 curl -H "Authorization: Bearer $id_token" "http://localhost:8080/api/users/"
 ```
+
+### Lancer le serveur avec docker
+Récupérer le fichier <code>src/main/docker/app.yml</code>
+
+Lancer la commande
+
+```
+docker-compose -f src/main/docker/app.yml up
+```
+
+**Prérequis:** Avoir les dernières versions de **docker** et de **docker-compose**
+
+Trois containers docker vont être créés :
+
+- Un service **mongodb** disponible sur le port **27017**
+- Un service **rabbitmq** disponible sur le port **15672** (pour l'IHM WEB) et **5672** pour le service MQ
+- Un service pour le serveur en tant que tel disponible sur le port **8080** avec en accès _admin/admin_
+
+
+**Attention:** Si certains services tournent sur votre machine sur ces ports cela va créer des erreurs !
+
+
+### Builds Maven
+Pour compiler le projet avec tous les tests (y compris les tests d'intégration) faire la commande suivante
+```
+mvn package -Pprod dockerfile:build
+```
+
+Pour déployer l'image Docker sur Docker hub
+```
+mvn package -Pprod dockerfile:push
+```
+
+Pour lancer un build Sonar sur le serveur Sonar
+```
+mvn test sonar:sonar -Dsonar.host.url=http://148.60.11.57:9000
+```
+
+
