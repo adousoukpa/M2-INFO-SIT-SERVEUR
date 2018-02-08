@@ -21,6 +21,12 @@ public class Obstacle implements Serializable {
     @Field("name")
     private String name;
 
+    @Field("pointA")
+    private Location pointA;
+
+    @Field("pointB")
+    private Location pointB;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -42,6 +48,23 @@ public class Obstacle implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Location getPointA() {
+        return pointA;
+    }
+
+    public void setPointA(Location pointA) {
+        this.pointA = pointA;
+    }
+
+    public Location getPointB() {
+        return pointB;
+    }
+
+    public void setPointB(Location pointB) {
+        this.pointB = pointB;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -67,8 +90,10 @@ public class Obstacle implements Serializable {
     @Override
     public String toString() {
         return "Obstacle{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            "}";
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", pointA=" + pointA +
+            ", pointB=" + pointB +
+            '}';
     }
 }
