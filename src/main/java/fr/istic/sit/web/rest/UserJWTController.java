@@ -56,8 +56,8 @@ public class UserJWTController {
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
         //mis en commentaire pour passer les tests
-        //rabbitMqServ.sendDroneLocation();
-        //rabbitMqServ.sendDroneState();
+        rabbitMqServ.sendDroneLocation();
+        rabbitMqServ.sendDroneState();
 
 
 

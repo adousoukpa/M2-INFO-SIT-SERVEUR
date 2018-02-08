@@ -14,7 +14,6 @@ public class TopicsSender {
 
     public void sendDroneLocation() {
         sendDroneAny("location","This is drone location");
-
     }
 
     public void sendDroneState() {
@@ -24,6 +23,4 @@ public class TopicsSender {
     private void sendDroneAny(String key,String message) {
         template.convertAndSend(topic.getName(), "drone." + key, message);
     }
-
-
 }

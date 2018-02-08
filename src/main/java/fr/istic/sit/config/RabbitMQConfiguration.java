@@ -1,10 +1,8 @@
 package fr.istic.sit.config;
 
+import fr.istic.sit.rabbitMQ.TopicsReceiver;
 import fr.istic.sit.rabbitMQ.TopicsSender;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,7 +22,7 @@ public class RabbitMQConfiguration {
         return new TopicsSender();
     }
 
-    @Bean
+    /*@Bean
     public Queue histoQueue() {
         return new Queue("histoQueue");
     }
@@ -34,7 +32,55 @@ public class RabbitMQConfiguration {
         return BindingBuilder.bind(histoQueue)
             .to(androidExchange)
             .with("#");
+    }*/
+
+    private static class ReceiverConfig {
+
+        @Bean
+        public TopicsReceiver receiver() {
+            return new TopicsReceiver();
+        }
+
+        @Bean
+        public Queue autoDeleteQueue1() {
+            return new AnonymousQueue();
+        }
+
+        @Bean
+        public Queue autoDeleteQueue2() {
+            return new AnonymousQueue();
+        }
+
+        @Bean
+        public Queue autoDeleteQueue3() {
+            return new AnonymousQueue();
+        }
+
+        @Bean
+        public Binding binding1(TopicExchange topic,
+                                 Queue autoDeleteQueue1) {
+            return BindingBuilder.bind(autoDeleteQueue1)
+                .to(topic)
+                .with("drone.location");
+        }
+
+        @Bean
+        public Binding binding2(TopicExchange topic,
+                                 Queue autoDeleteQueue2) {
+            return BindingBuilder.bind(autoDeleteQueue2)
+                .to(topic)
+                .with("drone.state");
+        }
+
+        @Bean
+        public Binding binding3(TopicExchange topic,
+                                 Queue autoDeleteQueue3) {
+            return BindingBuilder.bind(autoDeleteQueue3)
+                .to(topic)
+                .with("#");
+        }
     }
+
 
 
     /******************************************ConfigWorkingQueue********************/
