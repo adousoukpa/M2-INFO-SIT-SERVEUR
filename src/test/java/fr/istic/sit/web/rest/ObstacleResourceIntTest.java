@@ -193,22 +193,6 @@ public class ObstacleResourceIntTest {
     }
 
     @Test
-    public void deleteObstacle() throws Exception {
-        // Initialize the database
-        obstacleRepository.save(obstacle);
-        int databaseSizeBeforeDelete = obstacleRepository.findAll().size();
-
-        // Get the obstacle
-        restObstacleMockMvc.perform(delete("/api/obstacles/{id}", obstacle.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
-
-        // Validate the database is empty
-        List<Obstacle> obstacleList = obstacleRepository.findAll();
-        assertThat(obstacleList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Obstacle.class);
         Obstacle obstacle1 = new Obstacle();

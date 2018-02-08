@@ -111,17 +111,4 @@ public class ObstacleResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(obstacle));
     }
 
-    /**
-     * DELETE  /obstacles/:id : delete the "id" obstacle.
-     *
-     * @param id the id of the obstacle to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/obstacles/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteObstacle(@PathVariable String id) {
-        log.debug("REST request to delete Obstacle : {}", id);
-        obstacleRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
-    }
 }
