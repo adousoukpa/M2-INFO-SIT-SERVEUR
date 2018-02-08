@@ -1,6 +1,6 @@
 package fr.istic.sit.web.rest;
 
-import fr.istic.sit.rabbitMQ.TopicsSender;
+import fr.istic.sit.rabbitMQ.AndroidMissionSender;
 import fr.istic.sit.security.jwt.JWTConfigurer;
 import fr.istic.sit.security.jwt.TokenProvider;
 import fr.istic.sit.web.rest.vm.LoginVM;
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeoutException;
 public class UserJWTController {
 
     @Autowired
-    TopicsSender rabbitMqServ;
+    AndroidMissionSender rabbitMqServ;
 
     private final TokenProvider tokenProvider;
 
@@ -56,8 +56,8 @@ public class UserJWTController {
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
         //mis en commentaire pour passer les tests
-        rabbitMqServ.sendDroneLocation();
-        rabbitMqServ.sendDroneState();
+        //rabbitMqServ.sendDroneLocation();
+        //rabbitMqServ.sendDroneState();
 
 
 
