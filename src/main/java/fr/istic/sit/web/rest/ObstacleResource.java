@@ -2,24 +2,24 @@ package fr.istic.sit.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import fr.istic.sit.domain.Obstacle;
-
+import fr.istic.sit.domain.Utils;
 import fr.istic.sit.repository.ObstacleRepository;
 import fr.istic.sit.web.rest.errors.BadRequestAlertException;
 import fr.istic.sit.web.rest.util.HeaderUtil;
-import fr.istic.sit.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +69,10 @@ public class ObstacleResource {
      * or with status 500 (Internal Server Error) if the obstacle couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
+    @ApiOperation(value = "Mise à jour d'un obstacle",
+        notes = "Mise à jour d'un obstacle",
+        response = Obstacle.class,
+        responseContainer = "ResponseEntity")
     @PutMapping("/obstacles")
     @Timed
     public ResponseEntity<Obstacle> updateObstacle(@RequestBody Obstacle obstacle) throws URISyntaxException {
@@ -83,20 +87,45 @@ public class ObstacleResource {
     }
 
     /**
-     * GET  /obstacles : get all the obstacles.
+     * GET  /obstaclesNearLocation : Récupère la liste des obstacles dans un cercle défini
+     * par une localisation et un rayon
      *
-     * @param pageable the pagination information
+     * @param latitude : Latitude du centre du cercle de recherche
+     * @param longitude : Longitude du centre du cercle de recherche
+     * @param radius : rayon du cercle de recherche
      * @return the ResponseEntity with status 200 (OK) and the list of obstacles in body
      */
-    @GetMapping("/obstacles")
+    @ApiOperation(value = "Recherche des obstacles avec une localisation",
+        notes = "Récupère la liste des obstacles dans un cercle défini",
+        response = List.class,
+        responseContainer = "ResponseEntity")
+    @GetMapping("/obstaclesNearLocation")
     @Timed
-    public ResponseEntity<List<Obstacle>> getAllObstacles(Pageable pageable) {
-        log.debug("REST request to get a page of Obstacles");
-        Page<Obstacle> page = obstacleRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/obstacles");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+    public ResponseEntity<List<Obstacle>> getObstacleNearLocation(double latitude,double longitude, double radius) {
 
+        log.info("Requete REST de recherche d'obstacle. lat:{},long:{}, rayon:{}",latitude,longitude,radius);
+        List<Obstacle> obstacleListA = obstacleRepository.findByPointANear(
+            new Point(longitude,latitude),
+            new Distance(radius/1000, Metrics.KILOMETERS));
+
+        List<Obstacle> obstacleListB = obstacleRepository.findByPointANear(
+            new Point(longitude,latitude),
+            new Distance(radius/1000, Metrics.KILOMETERS));
+
+        List<Obstacle> obstacleListC = obstacleRepository.findByPointANear(
+            new Point(longitude,latitude),
+            new Distance(radius/1000, Metrics.KILOMETERS));
+
+        List<Obstacle> obstacleListD = obstacleRepository.findByPointANear(
+            new Point(longitude,latitude),
+            new Distance(radius/1000, Metrics.KILOMETERS));
+
+        List list1 = Utils.intersection(obstacleListA,obstacleListB);
+        List list2 = Utils.intersection(obstacleListC,obstacleListD);
+        List list = Utils.intersection(list1,list2);
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
     /**
      * GET  /obstacles/:id : get the "id" obstacle.
      *

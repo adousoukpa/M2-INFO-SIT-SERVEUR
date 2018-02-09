@@ -120,19 +120,6 @@ public class ObstacleResourceIntTest {
     }
 
     @Test
-    public void getAllObstacles() throws Exception {
-        // Initialize the database
-        obstacleRepository.save(obstacle);
-
-        // Get all the obstacleList
-        restObstacleMockMvc.perform(get("/api/obstacles?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(obstacle.getId())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
-    }
-
-    @Test
     public void getObstacle() throws Exception {
         // Initialize the database
         obstacleRepository.save(obstacle);
