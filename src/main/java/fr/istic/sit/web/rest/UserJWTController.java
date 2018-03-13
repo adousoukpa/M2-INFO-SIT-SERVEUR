@@ -1,5 +1,6 @@
 package fr.istic.sit.web.rest;
 
+import fr.istic.sit.rabbitMQ.AndroidMissionSender;
 import fr.istic.sit.security.jwt.JWTConfigurer;
 import fr.istic.sit.security.jwt.TokenProvider;
 import fr.istic.sit.web.rest.vm.LoginVM;
@@ -7,6 +8,7 @@ import fr.istic.sit.web.rest.vm.LoginVM;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Controller to authenticate users.
@@ -24,6 +28,9 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class UserJWTController {
+
+    @Autowired
+    AndroidMissionSender rabbitMqServ;
 
     private final TokenProvider tokenProvider;
 
@@ -47,6 +54,13 @@ public class UserJWTController {
         String jwt = tokenProvider.createToken(authentication, rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        //mis en commentaire pour passer les tests
+        //rabbitMqServ.sendDroneLocation();
+        //rabbitMqServ.sendDroneState();
+
+
+
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
 

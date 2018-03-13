@@ -76,7 +76,7 @@ public class ServeurApp {
             protocol,
             env.getProperty("server.port"),
             protocol,
-            InetAddress.getLocalHost().getHostAddress(),
+            //InetAddress.getLocalHost().getHostAddress(),
             env.getProperty("server.port"),
             env.getActiveProfiles());
     }
