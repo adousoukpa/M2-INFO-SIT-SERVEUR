@@ -22,18 +22,6 @@ public class RabbitMQConfiguration {
         return new AndroidMissionSender();
     }
 
-    /*@Bean
-    public Queue histoQueue() {
-        return new Queue("histoQueue");
-    }
-
-    @Bean
-    public Binding binding(TopicExchange androidExchange, Queue histoQueue) {
-        return BindingBuilder.bind(histoQueue)
-            .to(androidExchange)
-            .with("#");
-    }*/
-
     private static class ReceiverConfig {
 
         @Bean
